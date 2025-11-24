@@ -1,0 +1,9 @@
+sentry-sdk[fastapi]
+fastapi
+sqlalchemy
+uvicorn
+python-dotenv
+pydantic
+starlette
+alembic
+psycopg2-binary
