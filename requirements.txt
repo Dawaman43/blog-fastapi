@@ -8,7 +8,4 @@ starlette
 alembic
 psycopg2-binary
 pydantic_settings
-typing
-warnings
-secrets
 typing_extensions
