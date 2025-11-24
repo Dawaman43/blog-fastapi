@@ -24,3 +24,7 @@ class Admin(SQLModel):
     username: Optional[str] = Field(default=None)
     blogs: List["Blog"] = Relationship(back_populates="admin")
     hashed_password: str
+
+
+class TokenPayload(SQLModel):
+    sub: str | None = None
