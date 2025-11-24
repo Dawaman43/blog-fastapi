@@ -11,3 +11,4 @@ pydantic_settings
 typing_extensions
 sqlmodel
 jwt
+passlib[bcrypt]
