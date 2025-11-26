@@ -8,16 +8,24 @@ from backend.app.utils import hash_password
 engine = create_engine(str(Settings.SQLALCHEMY_DATABASE_URI))
 
 
-def init_db(session: Session) -> None:
-    existing_admin = session.exec(select(Admin)).first()
-    if not existing_admin:
-        admin = Admin(
-            email="admin@gmail.com",
-            username="admin",
-            is_superuser=True,
-            hashed_password=hash_password("12345678"),
-        )
+def init_db() -> None:
+    with Session(engine) as session:
+        existing_admin = session.exec(select(Admin)).first()
+        if not existing_admin:
+            admin = Admin(
+                email="admin@gmail.com",
+                username="admin",
+                is_superuser=True,
+                hashed_password=hash_password("12345678"),
+            )
 
-        print("Default admin created.")
-    else:
-        print("Admin already exists — skipping.")
+            session.add(admin)
+            session.commit()
+
+            print("Default admin created.")
+        else:
+            print("Admin already exists — skipping.")
+
+
+if __name__ == "__main__":
+    init_db()
