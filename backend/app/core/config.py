@@ -21,9 +21,11 @@ class Settings(BaseSettings):
 
     API_v1_STR: str = "/api/v1"
     SECRET_KEY: str = os.getenv("SECRET_KEY") or secrets.token_urlsafe(32)
+    if not os.getenv("SECRET_KEY"):
+        print("[Warning]: SECRET_KEY is not set in .env, generate new one")
     ACCESS_TOKEN_EXPIRE_MINS: int = 60 * 24 * 8
     FRONTEND_HOST: str = "http://localhost:5173"
-    ENVIROMENT: Literal["local", "staging", "production"] = "local"
+    ENVIRONMENT: Literal["local", "staging", "production"] = "local"
 
     BACKEND_CORS_ORIGINS: Annotated[
         list[AnyUrl] | str, BeforeValidator(parse_cors)
@@ -32,9 +34,11 @@ class Settings(BaseSettings):
     @computed_field
     @property
     def all_cors_origins(self) -> list[str]:
-        return [str(origin).rstrip("/") for origin in self.BACKEND_CORS_ORIGINS] + [
-            self.FRONTEND_HOST
+        origins: list[str] = [
+            str(origin).rstrip("/") for origin in self.BACKEND_CORS_ORIGINS
         ]
+        origins.append(self.FRONTEND_HOST.rstrip("/"))
+        return origins
 
     PROJECT_NAME: str = "Blog"
     SENTRY_DSN: HttpUrl | None = None
@@ -42,7 +46,7 @@ class Settings(BaseSettings):
     POSTGRES_PORT: int = 5432
     POSTGRES_USER: str = "postgres"
     POSTGRES_PASSWORD: str = ""
-    POSTGRES_DB: str = "fastapi_blog"
+    POSTGRES_DB: str = "fastapi_blogi"
 
     @computed_field
     @property
@@ -53,7 +57,7 @@ class Settings(BaseSettings):
             password=self.POSTGRES_PASSWORD,
             host=self.POSTGRES_SERVER,
             port=self.POSTGRES_PORT,
-            path=self.POSTGRES_DB,
+            path=f"/{self.POSTGRES_DB}",
         )
 
 
