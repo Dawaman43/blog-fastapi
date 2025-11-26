@@ -12,8 +12,6 @@ from jwt.exceptions import InvalidTokenError
 from pydantic import ValidationError
 from sqlmodel import Session
 
-jwt_typed = cast(Any, jwt)
-
 reusable_oauth2 = OAuth2PasswordBearer(
     tokenUrl=f"{settings.API_v1_STR}/login/access-token"
 )
@@ -30,14 +28,21 @@ TokenDep = Annotated[str, Depends(reusable_oauth2)]
 
 def get_current_Admin(session: SessionDep, token: TokenDep) -> Admin:
     try:
-        payload = jwt_typed.decode(
-            token, settings.SECRET_KEY, algorithms=[security.ALGORITHM]
-        )
+        payload = security.decode_access_token(token)
+        if not isinstance(payload, dict):
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN, detail="Invalid token payload"
+            )
         token_data = TokenPayload(**payload)
+
     except (InvalidTokenError, ValidationError):
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Could not validate credentials",
+        )
+    if token_data.sub is None:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN, detail="Token missing subject"
         )
     admin = session.get(Admin, token_data.sub)
 
