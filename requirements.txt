@@ -12,4 +12,3 @@ typing_extensions
 sqlmodel
 PyJWT
 passlib[bcrypt]
-jwt
