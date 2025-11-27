@@ -6,6 +6,8 @@ from app.models import Admin, Blog
 from fastapi import HTTPException
 from sqlmodel import Session, select
 
+from backend.app.core import security
+
 
 def create_blog(*, session: Session, admin: Admin, new_blog: Blog) -> Blog:
     db_obj = Blog(
@@ -62,3 +64,30 @@ def delete_blog(*, session: Session, id: UUID) -> Blog:
     session.commit()
 
     return blog_to_delete
+
+
+"""
+    Admin routes
+"""
+
+def get_admins(*, session:Session)->List[Admin]:
+    statement = select(Admin)
+    result = session.exec(statement)
+    return list(result.all())
+
+def create_admin(*, session:Session, new_admin: Admin, password:str)->Admin:
+    existing_email = session.exec(select(Admin).where(Admin.email == new_admin.email)).first()
+    if existing_email:
+        raise HTTPException(status_code=400, detail="Admin already registered")
+    hash_password = security.create_password_hash(password)
+    new_obj = Admin(
+        email=new_admin.email,
+        username=new_admin.username,
+        hashed_password=hash_password)
+
+
+    session.add(new_obj)
+    session.commit()
+    session.refresh(new_obj)
+
+    return new_obj

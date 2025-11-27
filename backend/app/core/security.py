@@ -38,6 +38,9 @@ def get_password_hash(password: str) -> str:
 
 def get_token_subject(token: str) -> str | None:
     payload = decode_access_token(token)
-    if not payload or "sub" not in payload
+    if not payload or "sub" not in payload:
         raise ValueError("Token payload missing 'sub' ")
     return payload.get("sub")
+
+def create_password_hash(password: str):
+    return pwd_context.hash(password)
