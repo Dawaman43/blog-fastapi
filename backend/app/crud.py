@@ -2,7 +2,7 @@ from datetime import datetime, timezone
 from typing import List, Optional
 from uuid import UUID
 
-from app.models import Admin, Blog
+from app.models import Admin, AdminCreate, Blog
 from fastapi import HTTPException
 from sqlmodel import Session, select
 
@@ -75,14 +75,12 @@ def get_admins(*, session:Session)->List[Admin]:
     result = session.exec(statement)
     return list(result.all())
 
-def create_admin(*, session:Session, new_admin: Admin, password:str)->Admin:
-    existing_email = session.exec(select(Admin).where(Admin.email == new_admin.email)).first()
-    if existing_email:
-        raise HTTPException(status_code=400, detail="Admin already registered")
-    hash_password = security.create_password_hash(password)
+def create_admin(*, session:Session, admin_id: AdminCreate)->Admin:
+    hash_password = security.create_password_hash(admin_id.password)
+
     new_obj = Admin(
-        email=new_admin.email,
-        username=new_admin.username,
+        email=admin_id.email,
+        username=admin_id.username,
         hashed_password=hash_password)
 
 
