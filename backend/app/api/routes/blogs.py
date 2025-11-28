@@ -2,13 +2,14 @@ from pkgutil import get_data
 from typing import List
 from uuid import UUID
 
-import app.crud as crud
-from app.api.deps import get_current_Admin, get_db
-from app.models import Admin, Blog
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlmodel import Session, select
 
-router = APIRouter(prefix="/blogs", tags=["tags"])
+import app.crud as crud
+from app.api.deps import get_current_Admin, get_db
+from app.models import Admin, Blog
+
+router = APIRouter(prefix="/blogs", tags=["blog"])
 
 
 @router.get("/", response_model=List[Blog])

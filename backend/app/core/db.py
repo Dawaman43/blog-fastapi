@@ -1,11 +1,12 @@
+from this import s
 from app import crud
-from app.core.config import Settings
+from app.core.config import settings
 from app.models import Admin
 from sqlmodel import Session, create_engine, select
 
-from backend.app.utils import hash_password
+from app.utils import hash_password
 
-engine = create_engine(str(Settings.SQLALCHEMY_DATABASE_URI))
+engine = create_engine(str(settings.SQLALCHEMY_DATABASE_URI))
 
 
 def init_db() -> None:

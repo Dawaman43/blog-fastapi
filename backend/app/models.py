@@ -22,14 +22,34 @@ class Admin(SQLModel, table=True):
     email: EmailStr = Field(unique=True, index=True, max_length=255)
     is_superuser: bool = Field(default=True)
     username: Optional[str] = Field(default=None)
-    blogs: List["Blog"] = Relationship(back_populates="admin", sa_relationship_kwargs={"cascade": "all,delete"})
     hashed_password: str
+    blogs: List["Blog"] = Relationship(
+        back_populates="admin", sa_relationship_kwargs={"cascade": "all,delete"}
+    )
 
 
 class TokenPayload(BaseModel):
     sub: str | None = None
 
+
 class AdminCreate(SQLModel):
     email: EmailStr
     username: str
     password: str
+
+
+class AdminPublic(SQLModel):
+    id: uuid.UUID
+    email: EmailStr
+    username: Optional[str]
+    is_superuser: bool
+
+
+class AdminLogin(BaseModel):
+    email: EmailStr
+    password: str
+
+
+class TokenResponse(BaseModel):
+    access_token: str
+    token_type: str = "bearer"

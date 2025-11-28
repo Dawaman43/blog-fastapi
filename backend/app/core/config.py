@@ -16,7 +16,7 @@ def parse_cors(v: Any) -> list[str] | str:
 
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
-        env_file="../.env", env_ignore_empty=True, extra="ignore"
+        env_file=".env", env_ignore_empty=True, extra="ignore"
     )
 
     API_v1_STR: str = "/api/v1"
@@ -57,7 +57,7 @@ class Settings(BaseSettings):
             password=self.POSTGRES_PASSWORD,
             host=self.POSTGRES_SERVER,
             port=self.POSTGRES_PORT,
-            path=f"/{self.POSTGRES_DB}",
+            path=self.POSTGRES_DB,
         )
 
 

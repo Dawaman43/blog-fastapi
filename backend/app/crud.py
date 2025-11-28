@@ -2,11 +2,11 @@ from datetime import datetime, timezone
 from typing import List, Optional
 from uuid import UUID
 
-from app.models import Admin, AdminCreate, Blog
 from fastapi import HTTPException
 from sqlmodel import Session, select
 
-from backend.app.core import security
+from app.core import security
+from app.models import Admin, AdminCreate, Blog
 
 
 def create_blog(*, session: Session, admin: Admin, new_blog: Blog) -> Blog:
@@ -70,19 +70,19 @@ def delete_blog(*, session: Session, id: UUID) -> Blog:
     Admin routes
 """
 
-def get_admins(*, session:Session)->List[Admin]:
+
+def get_admins(*, session: Session) -> List[Admin]:
     statement = select(Admin)
     result = session.exec(statement)
     return list(result.all())
 
-def create_admin(*, session:Session, admin_id: AdminCreate)->Admin:
-    hash_password = security.create_password_hash(admin_id.password)
+
+def create_admin(*, session: Session, admin_in: AdminCreate) -> Admin:
+    hash_password = security.create_password_hash(admin_in.password)
 
     new_obj = Admin(
-        email=admin_id.email,
-        username=admin_id.username,
-        hashed_password=hash_password)
-
+        email=admin_in.email, username=admin_in.username, hashed_password=hash_password
+    )
 
     session.add(new_obj)
     session.commit()
