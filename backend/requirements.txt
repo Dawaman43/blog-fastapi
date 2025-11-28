@@ -1,0 +1,14 @@
+sentry-sdk[fastapi]
+fastapi
+sqlalchemy
+uvicorn
+python-dotenv
+pydantic
+starlette
+alembic
+psycopg2-binary
+pydantic_settings
+typing_extensions
+sqlmodel
+PyJWT
+passlib[bcrypt]
