@@ -1,9 +1,8 @@
-from pkgutil import get_data
 from typing import List
 from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException, status
-from sqlmodel import Session, select
+from sqlmodel import Session
 
 import app.crud as crud
 from app.api.deps import get_current_Admin, get_db

@@ -4,7 +4,7 @@ from starlette.status import HTTP_401_UNAUTHORIZED
 
 from app.api.deps import get_db
 from app.core.security import create_access_token, verify_password
-from app.models import Admin, AdminLogin, TokenResponse
+from app.models import Admin, TokenResponse
 
 router = APIRouter(prefix="/login", tags=["login"])
 

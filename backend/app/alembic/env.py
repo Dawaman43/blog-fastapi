@@ -12,10 +12,11 @@ fileConfig(config.config_file_name)
 
 target_metadata = SQLModel.metadata
 
+
 def run_migrations_online():
     connectable = engine_from_config(
         {"sqlalchemy.url": DATABASE_URL},
-        prefix='sqlalchemy.',
+        prefix="sqlalchemy.",
         poolclass=pool.NullPool,
     )
 
@@ -23,5 +24,6 @@ def run_migrations_online():
         context.configure(connection=connection, target_metadata=target_metadata)
         with context.begin_transaction():
             context.run_migrations()
+
 
 run_migrations_online()

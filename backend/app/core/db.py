@@ -1,5 +1,3 @@
-from this import s
-from app import crud
 from app.core.config import settings
 from app.models import Admin
 from sqlmodel import Session, create_engine, select
